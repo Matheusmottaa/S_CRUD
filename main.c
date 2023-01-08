@@ -15,31 +15,33 @@ typedef struct{
 }Student; 
 
 Book *createBook(const char*, unsigned, float); 
+Book *copyBook(const Book*); 
 void print_book(const Book*); 
 void updatedBook(Book*, const char*, unsigned, float); 
 void removeBook(Book**); 
 
-Student *createStudent(const char*, unsigned); 
+Student *createStudent(const char*, unsigned, const Book*); 
 void print_student(const Student*); 
 void updatedStudent(Student*, const char*, unsigned); 
 void removeStudent(Student**); 
 
 int main()
 { 
-    Student *person = createStudent("John Doe", 21); 
+    Book *book1 = createBook("Harry Potter", 600, 125.99); 
+    Student *student = createStudent("John Doe", 21, book1); 
+    printf("&student = %p, student = %p\n", &student , student); 
 
-    printf("&person = %p, person = %p\n", &person , person); 
-
-    print_student(person); 
+    print_student(student); 
     putchar('\n'); 
     putchar('\n'); 
 
-    updatedStudent(person,"Jane Doe", 45); 
-    print_student(person); 
+    updatedStudent(student,"Jane Doe", 45); 
+    print_student(student); 
     putchar('\n'); 
 
-    removeStudent(&person); 
-    printf("&person = %p, person = %p\n", &person , person); 
+    removeStudent(&student); 
+
+    printf("&student = %p, student = %p\n", &student, student); 
 
     return 0; 
 }
@@ -51,6 +53,11 @@ Book *createBook(const char* title, unsigned pages, float price)
     book->pages = pages; 
     book->price = price; 
     return book;  
+}
+
+Book *copyBook(const Book* bk)
+{ 
+    return createBook(bk->title, bk->pages, bk->price); 
 }
 
 void print_book(const Book *book)
@@ -67,17 +74,17 @@ void updatedBook(Book *book, const char *title, unsigned pages, float price)
 
 void removeBook(Book **book)
 { 
-    free(*book); 
+    Book *bk = *book; 
+    free(bk); 
     *book = NULL; 
 }
 
-Student *createStudent(const char* name, unsigned age)
+Student *createStudent(const char* name, unsigned age, const Book *bk)
 { 
     Student *p = (Student*)calloc(1,sizeof(Student)); 
     strcpy(p->name, name); 
     p->age = age; 
-    p->fvBook = createBook("Harry Potter", 600, 125.99); 
-
+    p->fvBook = copyBook(bk); 
     return p; 
 }
 
@@ -117,9 +124,9 @@ void updatedStudent(Student *student, const char* name, unsigned age)
     }
 }
 
-void removeStudent(Student **p)
+void removeStudent(Student **student)
 {   
-    free((*(p))->fvBook); 
-    free(*p); 
-    *p = NULL; 
+    removeBook(&(*student)->fvBook); 
+    free(*student); 
+    *student = NULL; 
 }
