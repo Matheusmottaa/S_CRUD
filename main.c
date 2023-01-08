@@ -100,7 +100,7 @@ void updatedStudent(Student *student, const char* name, unsigned age)
     strcpy(student->name, name);
     student->age = age; 
 
-    printf("Do you want updated the book of the student? (y/n): "); 
+    printf("Do you want update the book of the student? (y/n): "); 
     char opt; 
     if((opt=getchar()) == 'y' || 'Y')
     { 
