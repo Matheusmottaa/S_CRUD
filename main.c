@@ -19,37 +19,27 @@ void print_book(const Book*);
 void updatedBook(Book*, const char*, unsigned, float); 
 void removeBook(Book**); 
 
-Student *createStudent(Book*, const char*, unsigned); 
+Student *createStudent(const char*, unsigned); 
 void print_student(const Student*); 
-void updatedStudent(Student*, const char*, unsigned, Book*); 
+void updatedStudent(Student*, const char*, unsigned); 
 void removeStudent(Student**); 
 
 int main()
 { 
-    
-    Book *book1 = createBook("Harry Potter", 600, 125.99); 
-    Student *john = createStudent(book1, "John Doe", 21); 
+    Student *person = createStudent("John Doe", 21); 
 
-    printf("&book = %p, book = %p\n", &book1 , book1); 
-    printf("&john = %p, john = %p\n", &john , john); 
+    printf("&person = %p, person = %p\n", &person , person); 
 
-    print_student(john); 
-
+    print_student(person); 
     putchar('\n'); 
     putchar('\n'); 
 
-    puts("Updated student: "); 
-    updatedStudent(john,"Jane Doe", 45, book1); 
-
-    print_student(john); 
-
+    updatedStudent(person,"Jane Doe", 45); 
+    print_student(person); 
     putchar('\n'); 
 
-    removeStudent(&john); 
-
-    printf("&book = %p, book = %p\n", &book1 , book1); 
-    printf("&john = %p, john = %p\n", &john , john); 
-
+    removeStudent(&person); 
+    printf("&person = %p, person = %p\n", &person , person); 
 
     return 0; 
 }
@@ -81,12 +71,12 @@ void removeBook(Book **book)
     *book = NULL; 
 }
 
-Student *createStudent(Book* fvb, const char* name, unsigned age)
+Student *createStudent(const char* name, unsigned age)
 { 
     Student *p = (Student*)calloc(1,sizeof(Student)); 
     strcpy(p->name, name); 
     p->age = age; 
-    p->fvBook = fvb; 
+    p->fvBook = createBook("Harry Potter", 600, 125.99); 
 
     return p; 
 }
@@ -98,7 +88,7 @@ void print_student(const Student *p)
     print_book(p->fvBook); 
 }
 
-void updatedStudent(Student *student, const char* name, unsigned age, Book* bk)
+void updatedStudent(Student *student, const char* name, unsigned age)
 { 
     strcpy(student->name, name);
     student->age = age; 
@@ -121,7 +111,7 @@ void updatedStudent(Student *student, const char* name, unsigned age, Book* bk)
 
         printf("Price: "); 
         scanf("%f", &price); 
-        
+
         updatedBook(student->fvBook, title, pages, price); 
         system("clear"); 
     }
